@@ -36,10 +36,8 @@ To demonstrate how to use UAPI Coroutine, here's a simple function that sends a 
 ```C#
 private void OnRequest()
 {
-    APIClient.CreateAndSendRequest(/*REQUEST KEY*/,
-                                   /*NetworkLoadingHandlerCreator*/,
-                                   /*APIConfigData*/, 
-                                   /*RequestFeedbackConfig*/,
+    APIClient.CreateAndSendRequest(/*APIConfigData*/,
+                                   /*RequestScreenConfig*/,
                                    /*RequestSendConfig*/,
                                    Response);
 
@@ -57,10 +55,8 @@ private void OnRequest()
 }
 ```
 #### Key Classes and Configurations:
-1. **`REQUEST KEY`:** The API key or authentication token needed to authorize the API request.
-2. **`NetworkLoadingHandlerCreator`:** Handles the loading state of the network request (e.g., showing a loading spinner). You can use `NetworkLoadingHandlerCreator.CreateAndGet()` to generate a loading handler.
 3. **`APIConfigData`:** Configuration data for the API request. This includes the base URL, endpoint, HTTP method, headers, and other request settings.
-4. **`RequestFeedbackConfig`:** Configuration that controls how feedback is displayed during the request, such as showing success or error messages.
+4. **`RequestScreenConfig`:** Configuration for managing the display of network-related screens during API requests, including options for showing, hiding, or customizing screens based on the network state or response.
 5. **`RequestSendConfig`:** Configuration for sending the request, such as retry settings or timeout options.
 6. **`Response(NetworkResponse response)`:** The callback function that handles the API response. It checks whether the response is successful, and logs the result accordingly.
 

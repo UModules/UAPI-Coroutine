@@ -1,5 +1,4 @@
 using System;
-using UAPIModule.SharedTypes;
 using UnityEngine;
 
 namespace UAPIModule.Tools

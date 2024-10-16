@@ -3,7 +3,6 @@ using System.Collections;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
-using UAPIModule.Abstraction;
 using UAPIModule.SharedTypes;
 using UAPIModule.Tools;
 using Unity.Plastic.Newtonsoft.Json;
@@ -11,28 +10,38 @@ using UnityEngine;
 
 namespace UAPIModule
 {
-    internal class RequestSender
+    internal class RequestSender : MonoBehaviour
     {
         protected static readonly HttpClient httpClient = new();
         internal readonly RequestLogger requestLogger = new();
-        protected readonly INetworkScreen loadingHandler;
 
-        public RequestSender(INetworkScreen loadingHandler)
+        private static RequestSender _instance;
+
+        public static RequestSender Instance
         {
-            this.loadingHandler = loadingHandler ?? throw new ArgumentNullException(nameof(loadingHandler));
+            get
+            {
+                if (_instance == null)
+                {
+                    var runnerObject = new GameObject("RequestSender");
+                    _instance = runnerObject.AddComponent<RequestSender>();
+                    DontDestroyOnLoad(runnerObject);
+                }
+                return _instance;
+            }
         }
 
-        public void SendRequest<T>(APIConfigData config, RequestFeedbackConfig feedbackConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
+        public void SendRequest<T>(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
         {
-            CoroutineRunner.Instance.StartCoroutine(SendRequestCoroutine(config, feedbackConfig, sendConfig, onComplete));
+            StartCoroutine(SendRequestCoroutine(config, screenConfig, sendConfig, onComplete));
         }
 
-        public void SendRequest(APIConfigData config, RequestFeedbackConfig feedbackConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
+        public void SendRequest(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
         {
-            CoroutineRunner.Instance.StartCoroutine(SendRequestCoroutine(config, feedbackConfig, sendConfig, onComplete));
+            StartCoroutine(SendRequestCoroutine(config, screenConfig, sendConfig, onComplete));
         }
 
-        private IEnumerator SendRequestCoroutine<T>(APIConfigData config, RequestFeedbackConfig feedbackConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
+        private IEnumerator SendRequestCoroutine<T>(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
         {
             if (httpClient == null)
             {
@@ -43,7 +52,7 @@ namespace UAPIModule
 
             HttpResponseMessage response = null;
 
-            yield return CoroutineRunner.Instance.StartCoroutine(SendRequestInternal(config, feedbackConfig, sendConfig, cancellationTokenSource.Token, (result) => response = result));
+            yield return StartCoroutine(SendRequestInternal(config, screenConfig, sendConfig, cancellationTokenSource.Token, (result) => response = result));
 
             if (response != null)
             {
@@ -69,7 +78,7 @@ namespace UAPIModule
                 }
 
                 requestLogger.LogResponse(networkResponse, config.BaseURL + config.Endpoint);
-                ShowResponseMessage(networkResponse);
+                ShowResponseMessage(networkResponse, screenConfig);
 
                 onComplete?.Invoke(networkResponse);
             }
@@ -79,7 +88,7 @@ namespace UAPIModule
             }
         }
 
-        private IEnumerator SendRequestCoroutine(APIConfigData config, RequestFeedbackConfig feedbackConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
+        private IEnumerator SendRequestCoroutine(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
         {
             if (httpClient == null)
             {
@@ -90,7 +99,7 @@ namespace UAPIModule
 
             HttpResponseMessage response = null;
 
-            yield return CoroutineRunner.Instance.StartCoroutine(SendRequestInternal(config, feedbackConfig, sendConfig, cancellationTokenSource.Token, (result) => response = result));
+            yield return StartCoroutine(SendRequestInternal(config, screenConfig, sendConfig, cancellationTokenSource.Token, (result) => response = result));
 
             if (response != null)
             {
@@ -115,7 +124,7 @@ namespace UAPIModule
                 }
 
                 requestLogger.LogResponse(networkResponse, config.BaseURL + config.Endpoint);
-                ShowResponseMessage(networkResponse);
+                ShowResponseMessage(networkResponse, screenConfig);
 
                 onComplete?.Invoke(networkResponse);
             }
@@ -125,7 +134,7 @@ namespace UAPIModule
             }
         }
 
-        private IEnumerator SendRequestInternal(APIConfigData config, RequestFeedbackConfig feedbackConfig, RequestSendConfig sendConfig, CancellationToken cancellationToken, Action<HttpResponseMessage> onComplete)
+        private IEnumerator SendRequestInternal(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, CancellationToken cancellationToken, Action<HttpResponseMessage> onComplete)
         {
             string url = !string.IsNullOrEmpty(config.BaseURL) ? config.BaseURL + config.Endpoint : config.Endpoint;
             if (sendConfig.HasPathSuffix)
@@ -145,10 +154,7 @@ namespace UAPIModule
 
             requestLogger.LogRequest(url);
 
-            if (feedbackConfig.ShowLoading)
-            {
-                loadingHandler?.ShowLoading();
-            }
+            screenConfig.TryShowScreen();
 
             var sendTask = httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseContentRead, cancellationToken);
             bool completed = false;
@@ -164,12 +170,16 @@ namespace UAPIModule
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
+                    HandleCustomError(new TimeoutException("Request timed out"), config, screenConfig); // Handle timeout
                     throw new TimeoutException("Request timed out");
                 }
+
+                HandleCustomError(sendTask.Exception ?? new Exception("An error occurred during the request."), config, screenConfig); // Handle other errors
                 throw sendTask.Exception ?? new Exception("An error occurred during the request.");
             }
 
             onComplete?.Invoke(sendTask.Result);
+            screenConfig.TryHideScreen();
         }
 
         protected void AddHeaders(HttpRequestMessage requestMessage, APIConfigData config, RequestSendConfig sendConfig)
@@ -195,7 +205,7 @@ namespace UAPIModule
 
             if (config.NeedsAuthHeader)
             {
-                string authToken = sendConfig.BearerToken ?? JwtTokenResolver.AccessToken;
+                string authToken = sendConfig.AccessToken ?? JwtTokenResolver.AccessToken;
                 if (string.IsNullOrEmpty(authToken))
                 {
                     Debug.LogError("Auth token is null or empty");
@@ -224,12 +234,12 @@ namespace UAPIModule
             }
         }
 
-        protected void ShowResponseMessage(NetworkResponse response)
+        protected void ShowResponseMessage(NetworkResponse response, RequestScreenConfig screenConfig)
         {
-            loadingHandler?.ShowMessage(response);
+            screenConfig.TryShowMessage(response);
         }
 
-        protected void HandleCustomError(Exception exception, APIConfigData config)
+        protected void HandleCustomError(Exception exception, APIConfigData config, RequestScreenConfig screenConfig)
         {
             string errorMessage;
             long statusCode;
@@ -258,7 +268,7 @@ namespace UAPIModule
             };
 
             requestLogger.LogResponse(errorResponse, config.BaseURL + config.Endpoint);
-            ShowResponseMessage(errorResponse);
+            ShowResponseMessage(errorResponse, screenConfig);
         }
 
         private string GetErrorMessage(HttpRequestException e)

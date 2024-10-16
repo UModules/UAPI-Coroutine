@@ -1,13 +1,10 @@
 using UAPIModule.SharedTypes;
-using UAPIModule.Tools;
 using UnityEngine;
 
 namespace UAPIModule.Sample
 {
     public class APISample : MonoBehaviour
     {
-        private const string API_KEY = "TEST";
-
         // GET Request
         [ContextMenu("GET Request")]
         private void OnGetRequest()
@@ -15,7 +12,7 @@ namespace UAPIModule.Sample
             Debug.Log("Sending GET request...");
             APIConfigData config = GetConfigData("/get", HTTPRequestMethod.GET);
 
-            APIClient.CreateAndSendRequest<GetResponse>(API_KEY, NetworkLoadingHandlerCreator.CreateAndGet(), config, RequestFeedbackConfig.InitializationFeedback, new(), Callback);
+            APIClient.SendRequest<GetResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
             void Callback(NetworkResponse<GetResponse> response)
             {
@@ -37,7 +34,7 @@ namespace UAPIModule.Sample
             Debug.Log("Sending POST request...");
             APIConfigData config = GetConfigData("/post", HTTPRequestMethod.POST);
 
-            APIClient.CreateAndSendRequest<PostResponse>(API_KEY, NetworkLoadingHandlerCreator.CreateAndGet(), config, RequestFeedbackConfig.InitializationFeedback, new(), Callback);
+            APIClient.SendRequest<PostResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
             void Callback(NetworkResponse<PostResponse> response)
             {
@@ -59,7 +56,7 @@ namespace UAPIModule.Sample
             Debug.Log("Sending PUT request...");
             APIConfigData config = GetConfigData("/put", HTTPRequestMethod.PUT);
 
-            APIClient.CreateAndSendRequest<PutResponse>(API_KEY, NetworkLoadingHandlerCreator.CreateAndGet(), config, RequestFeedbackConfig.InitializationFeedback, new(), Callback);
+            APIClient.SendRequest<PutResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
             void Callback(NetworkResponse<PutResponse> response)
             {
@@ -81,7 +78,7 @@ namespace UAPIModule.Sample
             Debug.Log("Sending DELETE request...");
             APIConfigData config = GetConfigData("/delete", HTTPRequestMethod.DELETE);
 
-            APIClient.CreateAndSendRequest<DeleteResponse>(API_KEY, NetworkLoadingHandlerCreator.CreateAndGet(), config, RequestFeedbackConfig.InitializationFeedback, new(), Callback);
+            APIClient.SendRequest<DeleteResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
             void Callback(NetworkResponse<DeleteResponse> response)
             {
@@ -103,7 +100,7 @@ namespace UAPIModule.Sample
             Debug.Log("Sending HEAD request...");
             APIConfigData config = GetConfigData("/headers", HTTPRequestMethod.HEAD);
 
-            APIClient.CreateAndSendRequest(API_KEY, NetworkLoadingHandlerCreator.CreateAndGet(), config, RequestFeedbackConfig.InitializationFeedback, new(), Callback);
+            APIClient.SendRequest(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
             void Callback(NetworkResponse response)
             {
@@ -125,7 +122,7 @@ namespace UAPIModule.Sample
             Debug.Log("Sending PATCH request...");
             APIConfigData config = GetConfigData("/patch", HTTPRequestMethod.PATCH);
 
-            APIClient.CreateAndSendRequest<PatchResponse>(API_KEY, NetworkLoadingHandlerCreator.CreateAndGet(), config, RequestFeedbackConfig.InitializationFeedback, new(), Callback);
+            APIClient.SendRequest<PatchResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
             void Callback(NetworkResponse<PatchResponse> response)
             {

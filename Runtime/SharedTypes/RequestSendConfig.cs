@@ -10,7 +10,7 @@ namespace UAPIModule
         public string RequestBodyString { get; set; } = null;
         public List<KeyValuePair<string, string>> RequestHeaders { get; set; } = null;
         public string PathSuffix { get; set; } = null;
-        internal string BearerToken { get; set; } = null;
+        public string AccessToken { get; set; } = null;
 
         internal bool HasBody()
         {

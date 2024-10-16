@@ -2,8 +2,8 @@ namespace UAPIModule.Abstraction
 {
     public interface INetworkScreen
     {
-        void ShowLoading();
-        void HideLoading();
+        void Show();
+        void Hide();
         void ShowMessage(NetworkResponse response);
     }
 }
