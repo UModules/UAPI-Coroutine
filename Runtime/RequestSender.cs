@@ -31,17 +31,17 @@ namespace UAPIModule
             }
         }
 
-        public void SendRequest<T>(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
+        public void SendRequest<T>(APIRequestConfig config, RequestScreenConfig screenConfig, Action<NetworkResponse<T>> onComplete) where T : class
         {
-            StartCoroutine(SendRequestCoroutine(config, screenConfig, sendConfig, onComplete));
+            StartCoroutine(SendRequestCoroutine(config, screenConfig, onComplete));
         }
 
-        public void SendRequest(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
+        public void SendRequest(APIRequestConfig config, RequestScreenConfig screenConfig, Action<NetworkResponse> onComplete)
         {
-            StartCoroutine(SendRequestCoroutine(config, screenConfig, sendConfig, onComplete));
+            StartCoroutine(SendRequestCoroutine(config, screenConfig, onComplete));
         }
 
-        private IEnumerator SendRequestCoroutine<T>(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
+        private IEnumerator SendRequestCoroutine<T>(APIRequestConfig config, RequestScreenConfig screenConfig, Action<NetworkResponse<T>> onComplete) where T : class
         {
             if (httpClient == null)
             {
@@ -52,7 +52,7 @@ namespace UAPIModule
 
             HttpResponseMessage response = null;
 
-            yield return StartCoroutine(SendRequestInternal(config, screenConfig, sendConfig, cancellationTokenSource.Token, (result) => response = result));
+            yield return StartCoroutine(SendRequestInternal(config, screenConfig, cancellationTokenSource.Token, (result) => response = result));
 
             if (response != null)
             {
@@ -77,7 +77,7 @@ namespace UAPIModule
                     networkResponse.errorMessage = responseBody;
                 }
 
-                requestLogger.LogResponse(networkResponse, config.BaseURL + config.Endpoint);
+                requestLogger.LogResponse(networkResponse, config.URL);
                 ShowResponseMessage(networkResponse, screenConfig);
 
                 onComplete?.Invoke(networkResponse);
@@ -88,7 +88,7 @@ namespace UAPIModule
             }
         }
 
-        private IEnumerator SendRequestCoroutine(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
+        private IEnumerator SendRequestCoroutine(APIRequestConfig config, RequestScreenConfig screenConfig, Action<NetworkResponse> onComplete)
         {
             if (httpClient == null)
             {
@@ -99,7 +99,7 @@ namespace UAPIModule
 
             HttpResponseMessage response = null;
 
-            yield return StartCoroutine(SendRequestInternal(config, screenConfig, sendConfig, cancellationTokenSource.Token, (result) => response = result));
+            yield return StartCoroutine(SendRequestInternal(config, screenConfig, cancellationTokenSource.Token, (result) => response = result));
 
             if (response != null)
             {
@@ -123,7 +123,7 @@ namespace UAPIModule
                     networkResponse.errorMessage = responseBody;
                 }
 
-                requestLogger.LogResponse(networkResponse, config.BaseURL + config.Endpoint);
+                requestLogger.LogResponse(networkResponse, config.URL);
                 ShowResponseMessage(networkResponse, screenConfig);
 
                 onComplete?.Invoke(networkResponse);
@@ -134,18 +134,18 @@ namespace UAPIModule
             }
         }
 
-        private IEnumerator SendRequestInternal(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, CancellationToken cancellationToken, Action<HttpResponseMessage> onComplete)
+        private IEnumerator SendRequestInternal(APIRequestConfig config, RequestScreenConfig screenConfig, CancellationToken cancellationToken, Action<HttpResponseMessage> onComplete)
         {
-            string url = !string.IsNullOrEmpty(config.BaseURL) ? config.BaseURL + config.Endpoint : config.Endpoint;
+            string url = config.URL;
 
             HttpRequestMessage requestMessage = new(new HttpMethod(config.MethodType.ToString()), url);
-            AddHeaders(requestMessage, config, sendConfig);
+            AddHeaders(requestMessage, config);
 
             if ((config.MethodType == HTTPRequestMethod.POST
                 || config.MethodType == HTTPRequestMethod.PUT
-                || config.MethodType == HTTPRequestMethod.PATCH) && sendConfig.HasBody)
+                || config.MethodType == HTTPRequestMethod.PATCH) && config.HasBody)
             {
-                SetRequestBody(requestMessage, config, sendConfig);
+                SetRequestBody(requestMessage, config);
             }
 
             requestLogger.LogRequest(url);
@@ -178,7 +178,7 @@ namespace UAPIModule
             screenConfig.TryHideScreen();
         }
 
-        protected void AddHeaders(HttpRequestMessage requestMessage, APIConfig config, RequestSendConfig sendConfig)
+        protected void AddHeaders(HttpRequestMessage requestMessage, APIRequestConfig config)
         {
             if (config.HeadersParameters != null)
             {
@@ -191,30 +191,21 @@ namespace UAPIModule
                 }
             }
 
-            if (sendConfig.HasHeaders)
-            {
-                foreach (var header in sendConfig.RequestHeaders)
-                {
-                    requestMessage.Headers.Add(header.Key, header.Value);
-                }
-            }
-
             if (config.NeedsAuthHeader)
             {
-                string authToken = sendConfig.AccessToken ?? JwtTokenResolver.AccessToken;
+                string authToken = config.AccessToken;
                 if (string.IsNullOrEmpty(authToken))
                 {
                     Debug.LogError("Auth token is null or empty");
                     throw new InvalidOperationException("Auth token is null or empty");
                 }
-                var authHeaderValue = config.UseBearerPrefix ? $"Bearer {authToken}" : authToken;
-                requestMessage.Headers.Add(JwtTokenResolver.AUTHORIZATION_HEADER_KEY, authHeaderValue);
+                requestMessage.Headers.Add("Authorization", authToken);
             }
         }
 
-        protected void SetRequestBody(HttpRequestMessage requestMessage, APIConfig config, RequestSendConfig sendConfig)
+        protected void SetRequestBody(HttpRequestMessage requestMessage, APIRequestConfig config)
         {
-            requestMessage.Content = new StringContent(JsonConvert.SerializeObject(sendConfig.RequestBody));
+            requestMessage.Content = new StringContent(JsonConvert.SerializeObject(config.Bodies));
 
             var contentTypeHeader = config.HeadersParameters.FirstOrDefault(h => h.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase)).Value;
             if (contentTypeHeader != null)
@@ -228,7 +219,7 @@ namespace UAPIModule
             screenConfig.TryShowMessage(response);
         }
 
-        protected void HandleCustomError(Exception exception, APIConfig config, RequestScreenConfig screenConfig)
+        protected void HandleCustomError(Exception exception, APIRequestConfig config, RequestScreenConfig screenConfig)
         {
             string errorMessage;
             long statusCode;
@@ -256,7 +247,7 @@ namespace UAPIModule
                 errorMessage = errorMessage
             };
 
-            requestLogger.LogResponse(errorResponse, config.BaseURL + config.Endpoint);
+            requestLogger.LogResponse(errorResponse, config.URL);
             ShowResponseMessage(errorResponse, screenConfig);
         }
 

@@ -36,9 +36,8 @@ To demonstrate how to use UAPI Coroutine, here's a simple function that sends a 
 ```C#
 private void OnRequest()
 {
-    APIClient.CreateAndSendRequest(/*APIConfig*/,
+    APIClient.CreateAndSendRequest(/*APIRequestConfig*/,
                                    /*RequestScreenConfig*/,
-                                   /*RequestSendConfig*/,
                                    Response);
 
     void Response(NetworkResponse response)
@@ -55,10 +54,9 @@ private void OnRequest()
 }
 ```
 #### Key Classes and Configurations:
-3. **`APIConfig`:** Configuration data for the API request. This includes the base URL, endpoint, HTTP method, headers, and other request settings.
-4. **`RequestScreenConfig`:** Configuration for managing the display of network-related screens during API requests, including options for showing, hiding, or customizing screens based on the network state or response.
-5. **`RequestSendConfig`:** Configuration for sending the API request, including properties for the request body (as a JSON object or string), request headers, a path suffix, and an access token, along with methods to determine if the request contains a body or a path suffix.
-6. **`Response(NetworkResponse response)`:** The callback function that handles the API response. It checks whether the response is successful, and logs the result accordingly.
+- **`APIRequestConfig`:** Configuration for creating and managing API requests. This class is responsible for defining the key properties of an API request, including the URL, HTTP method, headers, request body, timeout, and optional authentication. It also provides methods to generate request configurations with or without an authentication token. The class ensures that all necessary fields, such as the access token when authentication is required, are properly validated before making the request. It also offers methods to determine whether a request has headers or a body.
+- **`RequestScreenConfig`:** Configuration for managing the display of network-related screens during API requests, including options for showing, hiding, or customizing screens based on the network state or response.
+- **`Response(NetworkResponse response)`:** The callback function that handles the API response. It checks whether the response is successful, and logs the result accordingly.
 
 ## Documentation 📚
 For detailed documentation, please refer to the [UAPI Coroutine Documentation](https://github.com/UModules/UAPI-Coroutine/wiki).

@@ -10,9 +10,9 @@ namespace UAPIModule.Sample
         private void OnGetRequest()
         {
             Debug.Log("Sending GET request...");
-            APIConfig config = GetConfig("/get", HTTPRequestMethod.GET);
+            var config = GetConfig("/get", HTTPRequestMethod.GET);
 
-            APIClient.SendRequest<GetResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
+            APIClient.SendRequest<GetResponse>(config, RequestScreenConfig.GetDefaultScreen(), Callback);
 
             void Callback(NetworkResponse<GetResponse> response)
             {
@@ -32,9 +32,9 @@ namespace UAPIModule.Sample
         private void OnPostRequest()
         {
             Debug.Log("Sending POST request...");
-            APIConfig config = GetConfig("/post", HTTPRequestMethod.POST);
+            var config = GetConfig("/post", HTTPRequestMethod.POST);
 
-            APIClient.SendRequest<PostResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
+            APIClient.SendRequest<PostResponse>(config, RequestScreenConfig.GetDefaultScreen(), Callback);
 
             void Callback(NetworkResponse<PostResponse> response)
             {
@@ -54,9 +54,9 @@ namespace UAPIModule.Sample
         private void OnPutRequest()
         {
             Debug.Log("Sending PUT request...");
-            APIConfig config = GetConfig("/put", HTTPRequestMethod.PUT);
+            var config = GetConfig("/put", HTTPRequestMethod.PUT);
 
-            APIClient.SendRequest<PutResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
+            APIClient.SendRequest<PutResponse>(config, RequestScreenConfig.GetDefaultScreen(), Callback);
 
             void Callback(NetworkResponse<PutResponse> response)
             {
@@ -76,9 +76,9 @@ namespace UAPIModule.Sample
         private void OnDeleteRequest()
         {
             Debug.Log("Sending DELETE request...");
-            APIConfig config = GetConfig("/delete", HTTPRequestMethod.DELETE);
+            var config = GetConfig("/delete", HTTPRequestMethod.DELETE);
 
-            APIClient.SendRequest<DeleteResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
+            APIClient.SendRequest<DeleteResponse>(config, RequestScreenConfig.GetDefaultScreen(), Callback);
 
             void Callback(NetworkResponse<DeleteResponse> response)
             {
@@ -98,9 +98,9 @@ namespace UAPIModule.Sample
         private void OnHeadRequest()
         {
             Debug.Log("Sending HEAD request...");
-            APIConfig config = GetConfig("/headers", HTTPRequestMethod.HEAD);
+            var config = GetConfig("/headers", HTTPRequestMethod.HEAD);
 
-            APIClient.SendRequest(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
+            APIClient.SendRequest(config, RequestScreenConfig.GetDefaultScreen(), Callback);
 
             void Callback(NetworkResponse response)
             {
@@ -120,9 +120,9 @@ namespace UAPIModule.Sample
         private void OnPatchRequest()
         {
             Debug.Log("Sending PATCH request...");
-            APIConfig config = GetConfig("/patch", HTTPRequestMethod.PATCH);
+            var config = GetConfig("/patch", HTTPRequestMethod.PATCH);
 
-            APIClient.SendRequest<PatchResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
+            APIClient.SendRequest<PatchResponse>(config, RequestScreenConfig.GetDefaultScreen(), Callback);
 
             void Callback(NetworkResponse<PatchResponse> response)
             {
@@ -137,18 +137,15 @@ namespace UAPIModule.Sample
             }
         }
 
-        // Custom APIConfigData method for each API call
-        private APIConfig GetConfig(string endpoint, HTTPRequestMethod methodType)
+        private APIRequestConfig GetConfig(string endpoint, HTTPRequestMethod methodType)
         {
-            return new APIConfig(
-                "https://httpbin.org",                    // Base URL for httpbin
-                endpoint,                                 // API endpoint specific to each method
-                methodType,                               // HTTP method (GET, POST, etc.)
-                null,                                     // Headers (empty for now, can be customized)
-                false,                                    // NeedsAuthHeader (set false for this example)
-                10000,                                       // Timeout in seconds
-                false                                     // UseBearerPrefix
-            );
+            return APIRequestConfig.GetWithoutToken(baseURL: "https://httpbin.org",
+                                                    endpoint: endpoint,
+                                                    methodType: methodType,
+                                                    headers: null,
+                                                    bodies: null,
+                                                    timeout: 10000);
+
         }
 
         // Response classes for each type of request

@@ -12,14 +12,14 @@ namespace UAPIModule
             requestSender = RequestSender.Instance;
         }
 
-        public static void SendRequest(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse> callback)
+        public static void SendRequest(APIRequestConfig config, RequestScreenConfig screenConfig, Action<NetworkResponse> callback)
         {
-            requestSender.SendRequest(config, screenConfig, sendConfig, callback);
+            requestSender.SendRequest(config, screenConfig, callback);
         }
 
-        public static void SendRequest<K>(APIConfig config, RequestScreenConfig feedbackConfig, RequestSendConfig sendConfig, Action<NetworkResponse<K>> callback) where K : class
+        public static void SendRequest<K>(APIRequestConfig config, RequestScreenConfig feedbackConfig, Action<NetworkResponse<K>> callback) where K : class
         {
-            requestSender.SendRequest(config, feedbackConfig, sendConfig, callback);
+            requestSender.SendRequest(config, feedbackConfig, callback);
         }
     }
 }
