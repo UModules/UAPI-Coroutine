@@ -57,7 +57,7 @@ private void OnRequest()
 #### Key Classes and Configurations:
 3. **`APIConfigData`:** Configuration data for the API request. This includes the base URL, endpoint, HTTP method, headers, and other request settings.
 4. **`RequestScreenConfig`:** Configuration for managing the display of network-related screens during API requests, including options for showing, hiding, or customizing screens based on the network state or response.
-5. **`RequestSendConfig`:** Configuration for sending the request, such as retry settings or timeout options.
+5. **`RequestSendConfig`:** Configuration for sending the API request, including properties for the request body (as a JSON object or string), request headers, a path suffix, and an access token, along with methods to determine if the request contains a body or a path suffix.
 6. **`Response(NetworkResponse response)`:** The callback function that handles the API response. It checks whether the response is successful, and logs the result accordingly.
 
 ## Documentation 📚
