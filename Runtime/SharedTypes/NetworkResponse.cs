@@ -1,29 +1,32 @@
 using System;
 
-[Serializable]
-public class NetworkResponse<T> : NetworkResponse
+namespace UAPIModule
 {
-    public T data;
-
-    public override string ToString()
+    [Serializable]
+    public class NetworkResponse<T> : NetworkResponse
     {
-        return base.ToString() +
-               $"Data: {data?.ToString() ?? "null"}\n";
+        public T data;
+
+        public override string ToString()
+        {
+            return base.ToString() +
+                   $"Data: {data?.ToString() ?? "null"}\n";
+        }
     }
-}
 
-[Serializable]
-public class NetworkResponse
-{
-    public bool isSuccessful;
-    public long statusCode;
-    public string errorMessage;
-
-    public override string ToString()
+    [Serializable]
+    public class NetworkResponse
     {
-        return $"Network Response:\n" +
-               $"Is Successful: {isSuccessful}\n" +
-               $"Status Code: {statusCode}\n" +
-               $"Error Message: {errorMessage}\n";
+        public bool isSuccessful;
+        public long statusCode;
+        public string errorMessage;
+
+        public override string ToString()
+        {
+            return $"Network Response:\n" +
+                   $"Is Successful: {isSuccessful}\n" +
+                   $"Status Code: {statusCode}\n" +
+                   $"Error Message: {errorMessage}\n";
+        }
     }
 }
