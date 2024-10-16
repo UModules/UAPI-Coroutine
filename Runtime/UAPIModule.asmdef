@@ -1,0 +1,13 @@
+{
+    "name": "UAPI-Coroutine",
+    "rootNamespace": "UAPI Coroutine",
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

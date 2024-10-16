@@ -1,0 +1,16 @@
+{
+    "name": "UAPIModule.Sample",
+    "rootNamespace": "UAPIModule.Sample",
+    "references": [
+        "GUID:fb338a082c8bccd4c8a33c34b627ce0f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
