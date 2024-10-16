@@ -1,34 +1,37 @@
-# UAPI Coroutine
+# UAPI Coroutine 🚀
 UAPI Coroutine is a C# library designed to manage asynchronous API calls and processes within Unity using `IEnumerator`. This package leverages Unity's coroutine system to handle tasks that would otherwise require complex callback handling.
 
-## Features
+✨ If you prefer using UniTask for asynchronous operations, we also offer a version of this package that integrates with `UniTask`. You can find it [here](https://github.com/UModules/UAPI).
+
+## Features 🌟
 * **Coroutine-Based Operations:** Simplifies handling of asynchronous API requests using `IEnumerator`.
 * **Modular Design:** Flexible and customizable to fit into a variety of Unity projects.
 * **Seamless Integration:** Works naturally with Unity's existing coroutine system, without needing to introduce `async/await` or `Task`.
 
-## Installation
-### Git URL
+## Installation 🛠️
+### Git URL 🌐
 UAPI Coroutine supports Unity Package Manager. To install the project as a Git package, follow these steps:
 1. In Unity, open `Window -> Package Manager`.
 2. Press the `+` button and choose **Add package from git URL...**.
 3. Enter `"https://github.com/UModules/UAPI-Coroutine.gitupm"` and press **Add**.
 
-### Unity Package
+### Unity Package 📦
 Alternatively, you can add the code directly to your project:
 1. Clone the repo or download the latest release.
 2. Add the UAPI Coroutine folder to your Unity project or import the `.unitypackage`.
 
-### Manifest File
+### Manifest File 📄
 To install via git URL by editing the `manifest.json`, add this entry:
 
 `"com.useffarahmand.uapi-coroutine": "https://github.com/UModules/UAPI-Coroutine.git#upm"`
 
-## Usage
-### Sample Usage
+## Usage 📖
+### Sample Usage 🎮
 To see how UAPI Coroutine works, you can explore the sample provided:
 1. Open Unity and load the `Sample/Scenes/APISample.unity` scene.
 2. Run the sample to see how API requests are handled asynchronously using coroutines.
 
+### Custom Request Function 🔧
 To demonstrate how to use UAPI Coroutine, here's a simple function that sends a request and handles the response:
 ```C#
 private void OnRequest()
@@ -61,11 +64,8 @@ private void OnRequest()
 5. **`RequestSendConfig`:** Configuration for sending the request, such as retry settings or timeout options.
 6. **`Response(NetworkResponse response)`:** The callback function that handles the API response. It checks whether the response is successful, and logs the result accordingly.
 
-## Alternative Version: `UniTask` Support
-If you prefer using UniTask for asynchronous operations, we also offer a version of this package that integrates with `UniTask`. You can find it [here](https://github.com/UModules/UAPI).
-
-## Documentation
+## Documentation 📚
 For detailed documentation, please refer to the [UAPI Coroutine Documentation](https://github.com/UModules/UAPI-Coroutine/wiki).
 
-## License
+## License 📝
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/UModules/UAPI-Coroutine/blob/main/LICENSE) file for details.
