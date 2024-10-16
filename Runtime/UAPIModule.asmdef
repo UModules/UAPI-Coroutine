@@ -1,6 +1,7 @@
 {
-    "name": "UAPI-Coroutine",
-    "rootNamespace": "UAPI Coroutine",
+    "name": "UAPIModule",
+    "rootNamespace": "UAPIModule",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
