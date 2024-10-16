@@ -1,0 +1,25 @@
+{
+  "name": "com.useffarahmand.uapi-coroutine",
+  "version": "0.2.0",
+  "displayName": "UAPI Coroutine",
+  "description": "UAPIModule using Coroutine instead of UniTask for asynchronous operations.",
+  "unity": "2022.3",
+  "unityRelease": "0f1",
+  "author": {
+    "name": "Usef Farahmand",
+    "email": "devkit@useffarahmand.com",
+    "url": "https://github.com/UsefFarahmand"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UModules/UAPI-Coroutine.git"
+  },
+  "keywords": [
+    "unity",
+    "api",
+    "coroutine",
+    "network",
+    "unitypackage"
+  ]
+}
