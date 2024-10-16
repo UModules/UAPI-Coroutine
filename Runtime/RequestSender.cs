@@ -137,17 +137,13 @@ namespace UAPIModule
         private IEnumerator SendRequestInternal(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, CancellationToken cancellationToken, Action<HttpResponseMessage> onComplete)
         {
             string url = !string.IsNullOrEmpty(config.BaseURL) ? config.BaseURL + config.Endpoint : config.Endpoint;
-            if (sendConfig.HasPathSuffix)
-            {
-                url = UrlUtility.Join(url, sendConfig.PathSuffix);
-            }
 
-            HttpRequestMessage requestMessage = new HttpRequestMessage(new HttpMethod(config.MethodType.ToString()), url);
+            HttpRequestMessage requestMessage = new(new HttpMethod(config.MethodType.ToString()), url);
             AddHeaders(requestMessage, config, sendConfig);
 
             if ((config.MethodType == HTTPRequestMethod.POST
                 || config.MethodType == HTTPRequestMethod.PUT
-                || config.MethodType == HTTPRequestMethod.PATCH) && sendConfig.HasBody())
+                || config.MethodType == HTTPRequestMethod.PATCH) && sendConfig.HasBody)
             {
                 SetRequestBody(requestMessage, config, sendConfig);
             }
@@ -195,7 +191,7 @@ namespace UAPIModule
                 }
             }
 
-            if (sendConfig.RequestHeaders != null)
+            if (sendConfig.HasHeaders)
             {
                 foreach (var header in sendConfig.RequestHeaders)
                 {
@@ -218,14 +214,7 @@ namespace UAPIModule
 
         protected void SetRequestBody(HttpRequestMessage requestMessage, APIConfigData config, RequestSendConfig sendConfig)
         {
-            if (!string.IsNullOrEmpty(sendConfig.RequestBodyString))
-            {
-                requestMessage.Content = new StringContent(sendConfig.RequestBodyString);
-            }
-            else
-            {
-                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(sendConfig.RequestBody));
-            }
+            requestMessage.Content = new StringContent(JsonConvert.SerializeObject(sendConfig.RequestBody));
 
             var contentTypeHeader = config.HeadersParameters.FirstOrDefault(h => h.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase)).Value;
             if (contentTypeHeader != null)
