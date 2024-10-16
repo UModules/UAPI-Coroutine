@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace UAPIModule.Assets
 {
-    [CreateAssetMenu(fileName = nameof(APIConfig), menuName = "UAPIModule/" + nameof(APIConfig), order = 1)]
-    public class APIConfig : ScriptableObject
+    [CreateAssetMenu(fileName = nameof(APIConfigAsset), menuName = "UAPIModule/" + nameof(APIConfigAsset), order = 1)]
+    public class APIConfigAsset : ScriptableObject
     {
         [SerializeField, Tooltip("The base URL configuration for the API request.")]
         private BaseURLConfig baseURLConfig;
@@ -27,7 +27,7 @@ namespace UAPIModule.Assets
         [SerializeField, Tooltip("Indicates whether to use the 'Bearer' prefix in the authorization header.")]
         private bool useBearerPrefix;
 
-        public APIConfigData Get() =>
+        public APIConfig GetConfig() =>
             new(baseURLConfig, endpoint, methodType, headers, needsAuthHeader, timeout, useBearerPrefix);
     }
 }

@@ -31,17 +31,17 @@ namespace UAPIModule
             }
         }
 
-        public void SendRequest<T>(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
+        public void SendRequest<T>(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
         {
             StartCoroutine(SendRequestCoroutine(config, screenConfig, sendConfig, onComplete));
         }
 
-        public void SendRequest(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
+        public void SendRequest(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
         {
             StartCoroutine(SendRequestCoroutine(config, screenConfig, sendConfig, onComplete));
         }
 
-        private IEnumerator SendRequestCoroutine<T>(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
+        private IEnumerator SendRequestCoroutine<T>(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse<T>> onComplete) where T : class
         {
             if (httpClient == null)
             {
@@ -88,7 +88,7 @@ namespace UAPIModule
             }
         }
 
-        private IEnumerator SendRequestCoroutine(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
+        private IEnumerator SendRequestCoroutine(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, Action<NetworkResponse> onComplete)
         {
             if (httpClient == null)
             {
@@ -134,7 +134,7 @@ namespace UAPIModule
             }
         }
 
-        private IEnumerator SendRequestInternal(APIConfigData config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, CancellationToken cancellationToken, Action<HttpResponseMessage> onComplete)
+        private IEnumerator SendRequestInternal(APIConfig config, RequestScreenConfig screenConfig, RequestSendConfig sendConfig, CancellationToken cancellationToken, Action<HttpResponseMessage> onComplete)
         {
             string url = !string.IsNullOrEmpty(config.BaseURL) ? config.BaseURL + config.Endpoint : config.Endpoint;
 
@@ -178,7 +178,7 @@ namespace UAPIModule
             screenConfig.TryHideScreen();
         }
 
-        protected void AddHeaders(HttpRequestMessage requestMessage, APIConfigData config, RequestSendConfig sendConfig)
+        protected void AddHeaders(HttpRequestMessage requestMessage, APIConfig config, RequestSendConfig sendConfig)
         {
             if (config.HeadersParameters != null)
             {
@@ -212,7 +212,7 @@ namespace UAPIModule
             }
         }
 
-        protected void SetRequestBody(HttpRequestMessage requestMessage, APIConfigData config, RequestSendConfig sendConfig)
+        protected void SetRequestBody(HttpRequestMessage requestMessage, APIConfig config, RequestSendConfig sendConfig)
         {
             requestMessage.Content = new StringContent(JsonConvert.SerializeObject(sendConfig.RequestBody));
 
@@ -228,7 +228,7 @@ namespace UAPIModule
             screenConfig.TryShowMessage(response);
         }
 
-        protected void HandleCustomError(Exception exception, APIConfigData config, RequestScreenConfig screenConfig)
+        protected void HandleCustomError(Exception exception, APIConfig config, RequestScreenConfig screenConfig)
         {
             string errorMessage;
             long statusCode;

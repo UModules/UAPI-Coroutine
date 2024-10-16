@@ -10,7 +10,7 @@ namespace UAPIModule.Sample
         private void OnGetRequest()
         {
             Debug.Log("Sending GET request...");
-            APIConfigData config = GetConfigData("/get", HTTPRequestMethod.GET);
+            APIConfig config = GetConfig("/get", HTTPRequestMethod.GET);
 
             APIClient.SendRequest<GetResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
@@ -32,7 +32,7 @@ namespace UAPIModule.Sample
         private void OnPostRequest()
         {
             Debug.Log("Sending POST request...");
-            APIConfigData config = GetConfigData("/post", HTTPRequestMethod.POST);
+            APIConfig config = GetConfig("/post", HTTPRequestMethod.POST);
 
             APIClient.SendRequest<PostResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
@@ -54,7 +54,7 @@ namespace UAPIModule.Sample
         private void OnPutRequest()
         {
             Debug.Log("Sending PUT request...");
-            APIConfigData config = GetConfigData("/put", HTTPRequestMethod.PUT);
+            APIConfig config = GetConfig("/put", HTTPRequestMethod.PUT);
 
             APIClient.SendRequest<PutResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
@@ -76,7 +76,7 @@ namespace UAPIModule.Sample
         private void OnDeleteRequest()
         {
             Debug.Log("Sending DELETE request...");
-            APIConfigData config = GetConfigData("/delete", HTTPRequestMethod.DELETE);
+            APIConfig config = GetConfig("/delete", HTTPRequestMethod.DELETE);
 
             APIClient.SendRequest<DeleteResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
@@ -98,7 +98,7 @@ namespace UAPIModule.Sample
         private void OnHeadRequest()
         {
             Debug.Log("Sending HEAD request...");
-            APIConfigData config = GetConfigData("/headers", HTTPRequestMethod.HEAD);
+            APIConfig config = GetConfig("/headers", HTTPRequestMethod.HEAD);
 
             APIClient.SendRequest(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
@@ -120,7 +120,7 @@ namespace UAPIModule.Sample
         private void OnPatchRequest()
         {
             Debug.Log("Sending PATCH request...");
-            APIConfigData config = GetConfigData("/patch", HTTPRequestMethod.PATCH);
+            APIConfig config = GetConfig("/patch", HTTPRequestMethod.PATCH);
 
             APIClient.SendRequest<PatchResponse>(config, RequestScreenConfig.GetDefaultScreen(), new(), Callback);
 
@@ -138,9 +138,9 @@ namespace UAPIModule.Sample
         }
 
         // Custom APIConfigData method for each API call
-        private APIConfigData GetConfigData(string endpoint, HTTPRequestMethod methodType)
+        private APIConfig GetConfig(string endpoint, HTTPRequestMethod methodType)
         {
-            return new APIConfigData(
+            return new APIConfig(
                 "https://httpbin.org",                    // Base URL for httpbin
                 endpoint,                                 // API endpoint specific to each method
                 methodType,                               // HTTP method (GET, POST, etc.)
