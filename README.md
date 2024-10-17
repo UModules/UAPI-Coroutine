@@ -58,8 +58,5 @@ private void OnRequest()
 - **`RequestScreenConfig`:** Configuration for managing the display of network-related screens during API requests, including options for showing, hiding, or customizing screens based on the network state or response.
 - **`Response(NetworkResponse response)`:** The callback function that handles the API response. It checks whether the response is successful, and logs the result accordingly.
 
-## Documentation 📚
-For detailed documentation, please refer to the [UAPI Coroutine Documentation](https://github.com/UModules/UAPI-Coroutine/wiki).
-
 ## License 📝
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/UModules/UAPI-Coroutine/blob/main/LICENSE) file for details.
