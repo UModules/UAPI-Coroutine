@@ -36,9 +36,9 @@ To demonstrate how to use UAPI Coroutine, here's a simple function that sends a 
 ```C#
 private void OnRequest()
 {
-    APIClient.CreateAndSendRequest(/*APIRequestConfig*/,
-                                   /*RequestScreenConfig*/,
-                                   Response);
+    APIClient.SendRequest(/*APIRequestConfig*/,
+                          /*RequestScreenConfig*/,
+                          Response);
 
     void Response(NetworkResponse response)
     {
