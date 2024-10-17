@@ -1,4 +1,4 @@
 ﻿namespace UAPIModule.SharedTypes
 {
-    public enum HTTPRequestMethod { GET, POST, PUT, HEAD, CREATE, DELETE , PATCH }
+    public enum HTTPRequestMethod { GET, POST, PUT, DELETE, PATCH, HEAD }
 }

@@ -1,0 +1,19 @@
+{
+    "name": "UAPIModule.Test",
+    "rootNamespace": "UAPIModule.Test",
+    "references": [
+        "GUID:fb338a082c8bccd4c8a33c34b627ce0f",
+        "GUID:27619889b8ba8c24980f49ee34dbb44a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
