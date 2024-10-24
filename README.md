@@ -1,7 +1,7 @@
 # UAPI Coroutine 🚀
 UAPI Coroutine is a C# library designed to manage asynchronous API calls and processes within Unity using `IEnumerator`. This package leverages Unity's coroutine system to handle tasks that would otherwise require complex callback handling.
 
-✨ If you prefer using UniTask for asynchronous operations, we also offer a version of this package that integrates with `UniTask`. You can find it [here](https://github.com/UModules/UAPI).
+✨ If you prefer using UniTask for asynchronous operations, we also offer a version of this package that integrates with `UniTask`. You can find it [here](https://github.com/UModules/UAPI-UniTask).
 
 ## Features 🌟
 * **Coroutine-Based Operations:** Simplifies handling of asynchronous API requests using `IEnumerator`.
